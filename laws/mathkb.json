@@ -1,0 +1,669 @@
+{
+ "domain": "mathkb",
+ "about": "laws of the math knowledge base concepts (MATH-CORE-0): properties, not definitions; python lane first",
+ "axioms": [
+  {
+   "id": "mathkb.crt.bijection",
+   "statement": "for coprime m1, m2 the map x -> (x mod m1, x mod m2) on [0, m1*m2) hits every residue pair exactly once (CRT)",
+   "vars": [
+    "m1",
+    "m2"
+   ],
+   "forms": {
+    "python": "len({(x % m1, x % m2) for x in range(m1 * m2)}) == m1 * m2"
+   },
+   "gen": "def gen(R, scope):\n    import math\n    while True:\n        a, b = R.randint(2, 60), R.randint(2, 60)\n        if math.gcd(a, b) == 1: return a, b",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)",
+   "prelude": ""
+  },
+  {
+   "id": "mathkb.mixed_radix.roundtrip",
+   "statement": "a mixed-radix value split back by divmod in bases m0, m1 returns its digits",
+   "vars": [
+    "d0",
+    "d1",
+    "d2",
+    "m0",
+    "m1"
+   ],
+   "forms": {
+    "python": "(lambda v: (v % m0, v // m0 % m1, v // m0 // m1))(d0 + m0 * (d1 + m1 * d2)) == (d0, d1, d2)"
+   },
+   "gen": "def gen(R, scope):\n    m0, m1 = R.randint(2, 100), R.randint(2, 100)\n    return R.randrange(m0), R.randrange(m1), R.randint(0, 10 ** 6), m0, m1",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)",
+   "prelude": ""
+  },
+  {
+   "id": "mathkb.barrett.equals_mod",
+   "statement": "Barrett reduction with k = 16 (mu = floor(2^32 / m), at most two corrections) equals a mod m for 2 <= m < 2^16, 0 <= a < m^2",
+   "vars": [
+    "a",
+    "m"
+   ],
+   "forms": {
+    "python": "barrett(a, m) == a % m"
+   },
+   "prelude": "def barrett(a, m):\n    r = a - ((a * (2 ** 32 // m)) >> 32) * m\n    if r >= 2 * m: return r - 2 * m\n    return r - m if r >= m else r\n",
+   "gen": "def gen(R, scope):\n    m = R.randint(2, 65535)\n    return R.randrange(m * m), m",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)"
+  },
+  {
+   "id": "mathkb.hamming.triangle",
+   "statement": "Hamming distance is a metric: zero on itself, symmetric, triangle inequality (teeth: popcount(a|b) passes triangle + symmetry, fails identity)",
+   "vars": [
+    "a",
+    "b",
+    "c"
+   ],
+   "forms": {
+    "python": "h(a, a) == 0 and h(a, c) <= h(a, b) + h(b, c) and h(a, b) == h(b, a)"
+   },
+   "prelude": "def h(x, y):\n    return bin(x ^ y).count('1')\n",
+   "gen": "def gen(R, scope):\n    return tuple(R.getrandbits(R.choice([8, 31, 64])) for _ in range(3))",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)"
+  },
+  {
+   "id": "mathkb.isqrt.newton_brackets",
+   "statement": "integer Newton from x0 = n stops at r with r*r <= n < (r+1)*(r+1)",
+   "vars": [
+    "n"
+   ],
+   "forms": {
+    "python": "(lambda r: r * r <= n < (r + 1) * (r + 1))(newton(n))"
+   },
+   "prelude": "def newton(n):\n    x = n\n    while x * x > n:\n        x = (x + n // x) // 2\n    return x\n",
+   "gen": "def gen(R, scope):\n    return (R.choice([R.randint(0, 100), R.randint(0, 10 ** 6), R.getrandbits(62)]),)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)"
+  },
+  {
+   "id": "mathkb.period.reproduces",
+   "statement": "the smallest period p of a sequence reproduces it: v[i] == v[i mod p] for every i",
+   "vars": [
+    "v"
+   ],
+   "forms": {
+    "python": "(lambda p: all(v[i] == v[i % p] for i in range(len(v))))(period(v))"
+   },
+   "prelude": "def period(v):\n    return next(p for p in range(1, len(v) + 1) if all(v[i] == v[i + p] for i in range(len(v) - p)))\n",
+   "gen": "def gen(R, scope):\n    base = [R.randint(0, 2) for _ in range(R.randint(1, 5))]\n    n = R.randint(1, 30)\n    return ([base[i % len(base)] for i in range(n)],)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)"
+  },
+  {
+   "id": "mathkb.absmean.ternary_sign",
+   "statement": "absmean quantisation (BitNet b1.58) gives values in {-1, 0, 1} that never flip a weight's sign",
+   "vars": [
+    "w"
+   ],
+   "forms": {
+    "python": "all(q in (-1, 0, 1) and q * x >= 0 for q, x in zip(quant(w), w))"
+   },
+   "prelude": "def quant(w):\n    s = max(sum(abs(x) for x in w) / len(w), 1e-5)\n    return [min(1, max(-1, round(x / s))) for x in w]\n",
+   "gen": "def gen(R, scope):\n    return ([R.uniform(-3, 3) * R.choice([1, 1e-3, 100]) for _ in range(R.randint(1, 64))],)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)"
+  },
+  {
+   "id": "mathkb.softmax.normalised_shift_invariant",
+   "statement": "stable softmax sums to 1, is shift-invariant, and p_i / p_j = exp(x_i − x_j) (teeth: exp(x/10) passes the first two, fails the ratio)",
+   "vars": [
+    "x",
+    "c"
+   ],
+   "forms": {
+    "python": "(lambda p: abs(sum(p) - 1) < 1e-9 and all(abs(u - w) < 1e-9 for u, w in zip(p, sm([v + c for v in x]))) and all(abs(p[i] / p[0] - math.exp(x[i] - x[0])) <= 1e-9 * max(1.0, math.exp(x[i] - x[0])) for i in range(len(x)) if p[0] > 1e-300 and x[i] - x[0] < 600))(sm(x))"
+   },
+   "prelude": "import math\ndef sm(x):\n    m = max(x); e = [math.exp(v - m) for v in x]; z = sum(e)\n    return [v / z for v in e]\n",
+   "gen": "def gen(R, scope):\n    return [R.uniform(-50, 50) for _ in range(R.randint(1, 40))], R.uniform(-100, 100)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)"
+  },
+  {
+   "id": "mathkb.fib.cassini",
+   "statement": "Cassini's identity: F(n-1) F(n+1) - F(n)^2 = (-1)^n",
+   "vars": [
+    "n"
+   ],
+   "forms": {
+    "python": "F(n - 1) * F(n + 1) - F(n) ** 2 == (-1) ** n"
+   },
+   "prelude": "def F(n):\n    a, b = 0, 1\n    for _ in range(n): a, b = b, a + b\n    return a\n",
+   "gen": "def gen(R, scope):\n    return (R.randint(1, 300),)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)"
+  },
+  {
+   "id": "mathkb.clock.roundtrip",
+   "statement": "reading a time back from its residues on rings 3, 5, 7 returns the time (period 105)",
+   "vars": [
+    "t"
+   ],
+   "forms": {
+    "python": "read(t % 3, t % 5, t % 7) == t"
+   },
+   "prelude": "def read(a, b, c):\n    return next(x for x in range(105) if x % 3 == a and x % 5 == b and x % 7 == c)\n",
+   "gen": "def gen(R, scope):\n    return (R.randrange(105),)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-07 (MATH-CORE-0 M2)",
+   "why": "property of a MATH-CONCEPTS-INDEX concept (MATH-CORE-0)"
+  },
+  {
+   "id": "mathkb.montgomery.domain_homomorphism",
+   "statement": "Montgomery product with R = 2^16 is a homomorphism of the Montgomery domain: mont(aR, bR) = (ab)R mod m, and mont(x, 1) leaves the domain (= x·R⁻¹), for odd 3 <= m < 2^16",
+   "vars": [
+    "a",
+    "b",
+    "m"
+   ],
+   "forms": {
+    "python": "mont(a * 65536 % m, b * 65536 % m, m) == a * b * 65536 % m and mont(mont(a * 65536 % m, b * 65536 % m, m), 1, m) == a * b % m"
+   },
+   "prelude": "def mont(a, b, m):\n    x = 1\n    for _ in range(5): x = x * (2 - m * x) & 65535\n    t = a * b; u = (t & 65535) * (65536 - x) & 65535; r = (t + u * m) >> 16\n    return r - m if r >= m else r\n",
+   "gen": "def gen(R, scope):\n    m = R.randrange(32769, 65536, 2) if R.random() < 0.7 else R.randrange(3, 65536, 2)\n    return R.randrange(m), R.randrange(m), m",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0 D1.8, rung 1)",
+   "why": "crypto concept ladder rung 1 (Armilla / FHE / Ed25519 arithmetic)"
+  },
+  {
+   "id": "mathkb.mod_inverse.involution",
+   "statement": "the modular inverse undoes itself and multiplies to one: a·inv(a) ≡ 1 and inv(inv(a)) = a (mod m), gcd(a, m) = 1",
+   "vars": [
+    "a",
+    "m"
+   ],
+   "forms": {
+    "python": "a * inv(a, m) % m == 1 and inv(inv(a, m), m) == a"
+   },
+   "prelude": "def inv(a, m):\n    s0, s1, r0, r1 = 1, 0, a, m\n    while r1 > 0:\n        q = r0 // r1; s0, s1, r0, r1 = s1, s0 - q * s1, r1, r0 - q * r1\n    return s0 % m\n",
+   "gen": "def gen(R, scope):\n    import math\n    while True:\n        m = R.randint(2, 65535); a = R.randint(1, m - 1) if m > 1 else 1\n        if math.gcd(a, m) == 1: return a, m",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0 D1.8, rung 1)",
+   "why": "crypto concept ladder rung 1 (Armilla / FHE / Ed25519 arithmetic)"
+  },
+  {
+   "id": "mathkb.modexp.exponent_and_base_homomorphism",
+   "statement": "modular exponentiation adds exponents and multiplies bases: b^(e1+e2) = b^e1·b^e2 and (b1·b2)^e = b1^e·b2^e (mod m)",
+   "vars": [
+    "b",
+    "c",
+    "e",
+    "f",
+    "m"
+   ],
+   "forms": {
+    "python": "pe(b, e + f, m) == pe(b, e, m) * pe(b, f, m) % m and pe(b * c % m, e, m) == pe(b, e, m) * pe(c, e, m) % m"
+   },
+   "prelude": "def pe(b, e, m):\n    acc, base = 1 % m, b % m\n    while e > 0:\n        if e & 1: acc = acc * base % m\n        base = base * base % m; e >>= 1\n    return acc\n",
+   "gen": "def gen(R, scope):\n    m = R.randint(2, 65535)\n    return R.randrange(m), R.randrange(m), R.randrange(1 << 20), R.randrange(1 << 20), m",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0 D1.8, rung 1)",
+   "why": "crypto concept ladder rung 1 (Armilla / FHE / Ed25519 arithmetic)"
+  },
+  {
+   "id": "mathkb.base_extension.order_free_and_exact",
+   "statement": "RNS base extension by mixed radix gives x mod p whatever the order of the two source bases: ext(r1,m1,r2,m2,p) = ext(r2,m2,r1,m1,p) = x mod p",
+   "vars": [
+    "x",
+    "m1",
+    "m2",
+    "p"
+   ],
+   "forms": {
+    "python": "ext(x % m1, m1, x % m2, m2, p) == ext(x % m2, m2, x % m1, m1, p) == x % p"
+   },
+   "prelude": "def inv(a, m):\n    s0, s1, r0, r1 = 1, 0, a, m\n    while r1 > 0:\n        q = r0 // r1; s0, s1, r0, r1 = s1, s0 - q * s1, r1, r0 - q * r1\n    return s0 % m\ndef ext(r1, m1, r2, m2, p):\n    d1 = (r2 - r1 % m2) % m2 * inv(m1 % m2, m2) % m2\n    return (r1 + m1 * d1) % p\n",
+   "gen": "def gen(R, scope):\n    import math\n    while True:\n        m1, m2 = R.randint(2, 4095), R.randint(2, 4095)\n        if math.gcd(m1, m2) == 1: return R.randrange(m1 * m2), m1, m2, R.randint(2, 4095)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0 D1.8, rung 1)",
+   "why": "crypto concept ladder rung 1 (Armilla / FHE / Ed25519 arithmetic)"
+  },
+  {
+   "id": "mathkb.rns.ring_homomorphism",
+   "statement": "residue-wise product and sum are the ring homomorphism: crt(rns_mul(a,b)) = a·b mod M and crt(rns_add(a,b)) = a+b mod M, for coprime moduli with M = prod(ms)",
+   "vars": [
+    "a",
+    "b",
+    "ms"
+   ],
+   "forms": {
+    "python": "crt(rns_mul([a % m for m in ms], [b % m for m in ms], ms), ms) == a * b % math.prod(ms) and crt(rns_add([a % m for m in ms], [b % m for m in ms], ms), ms) == (a + b) % math.prod(ms)"
+   },
+   "prelude": "P16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\nimport math\ndef crt(rs, ms):\n    M = math.prod(ms)\n    return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef rns_mul(ra, rb, ms): return [(a * b) % m for a, b, m in zip(ra, rb, ms)]\ndef rns_add(ra, rb, ms): return [(a + b) % m for a, b, m in zip(ra, rb, ms)]\n",
+   "gen": "def gen(R, scope):\n    import math\n    k = R.randint(1, 6); ms = R.sample(P16, k); M = math.prod(ms)\n    return R.randrange(M), R.randrange(M), ms\n",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0 rung 2, built by the factory)",
+   "why": "big numbers as RNS residue vectors (Armilla / FHE arithmetic)"
+  },
+  {
+   "id": "mathkb.rns.extension_is_the_same_number",
+   "statement": "base extension changes the moduli, never the number: extending to ps and back to ms returns the original residues whenever prod(ms) <= prod(ps)",
+   "vars": [
+    "a",
+    "b",
+    "ms"
+   ],
+   "forms": {
+    "python": "(lambda rs, ps: ext(ext(rs, ms, ps), ps, ms) == rs if math.prod(ms) <= math.prod(ps) else True)([a % m for m in ms], [p for p in [65521, 65519, 65497, 65479, 65449, 65447, 65437] if p not in ms][:len(ms) + 1])"
+   },
+   "prelude": "P16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\nimport math\ndef crt(rs, ms):\n    M = math.prod(ms)\n    return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef rns_mul(ra, rb, ms): return [(a * b) % m for a, b, m in zip(ra, rb, ms)]\ndef rns_add(ra, rb, ms): return [(a + b) % m for a, b, m in zip(ra, rb, ms)]\ndef ext(rs, ms, ps):\n    x = crt(rs, ms)\n    return [x % p for p in ps]\n",
+   "gen": "def gen(R, scope):\n    import math\n    k = R.randint(1, 6); ms = R.sample(P16, k); M = math.prod(ms)\n    return R.randrange(M), R.randrange(M), ms\n",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0 rung 2, built by the factory)",
+   "why": "big numbers as RNS residue vectors (Armilla / FHE arithmetic)"
+  },
+  {
+   "id": "mathkb.rns_montgomery.domain_homomorphism",
+   "statement": "the RNS Montgomery product is the Montgomery-domain homomorphism read on base B: mont(x,y) = x·y·MA^-1 mod N (reduced), so crt(mont(xR,yR)) mod N = x·y·MA mod N for MA > 4N, MB > 2N",
+   "vars": [
+    "x",
+    "y",
+    "N",
+    "A",
+    "B"
+   ],
+   "forms": {
+    "python": "crt(mont(x * math.prod(A) % N, y * math.prod(A) % N, N, A, B), B) % N == x * y * math.prod(A) % N"
+   },
+   "prelude": "P16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\nimport math\ndef crt(rs, ms):\n    M = math.prod(ms)\n    return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef rns_mul(ra, rb, ms): return [(a * b) % m for a, b, m in zip(ra, rb, ms)]\ndef rns_add(ra, rb, ms): return [(a + b) % m for a, b, m in zip(ra, rb, ms)]\ndef mont(x, y, N, A, B):\n    MA = math.prod(A)\n    q = (-x * y * pow(N, -1, MA)) % MA\n    r = (x * y + q * N) // MA\n    return [r % b for b in B]\n",
+   "gen": "def gen(R, scope):\n    import math\n    while True:\n        k = R.randint(2, 5); pr = R.sample(P16, 2 * k); A, B = pr[:k], pr[k:]\n        MA, MB = math.prod(A), math.prod(B)\n        if MA // 4 < 3: continue\n        N = R.randrange(3, min(MA // 4, MB // 2)) | 1\n        if math.gcd(N, MA) == 1: return R.randrange(N), R.randrange(N), N, A, B\n",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0 rung 2, built by the factory)",
+   "why": "big numbers as RNS residue vectors (Armilla / FHE arithmetic)"
+  },
+  {
+   "id": "mathkb.constant_time.trace_invariant",
+   "statement": "the masked Barrett reduction's executed-line trace does not depend on the secret: trace(ct_reduce, (a1, m)) == trace(ct_reduce, (a2, m)) for any two secrets a1, a2 under the same modulus, and the value still equals a mod m",
+   "vars": [
+    "a1",
+    "a2",
+    "m"
+   ],
+   "forms": {
+    "python": "_trace(ct_reduce, (a1, m)) == _trace(ct_reduce, (a2, m)) and ct_reduce(a1, m) == a1 % m and ct_reduce(a2, m) == a2 % m"
+   },
+   "prelude": "import sys\ndef _trace(fn, args):\n    \"\"\"the executed-line sequence of fn(args): a branch taken differently shows up as a different sequence (a stand-in for\n    the op/branch/address trace a constant-time audit measures).\"\"\"\n    seq = []\n    def tr(frame, ev, arg):\n        if ev == \"line\" and frame.f_code.co_name == fn.__name__: seq.append(frame.f_lineno)\n        return tr\n    old = sys.gettrace(); sys.settrace(tr)\n    try: fn(*args)\n    finally: sys.settrace(old)\n    return seq\ndef ct_reduce(a, m):\n    r = a - (a * (2 ** 32 // m) >> 32) * m\n    t = r - 2 * m\n    r = r + ((t >> 63) - 1 & 0) + (t if False else 0) * 0\n    ge2 = ((2 * m - 1 - r) >> 63) & 1\n    r = r - 2 * m * ge2\n    ge1 = ((m - 1 - r) >> 63) & 1\n    r = r - m * ge1\n    return r\n",
+   "gen": "def gen(R, scope):\n    m = R.randint(2, 65535)\n    return R.randrange(m * m), R.randrange(m * m), m",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0 D3.3, rung 5)",
+   "why": "a NEW law kind for the factory: constant-time as a property the core can cement and re-check, not an auditor's one-off read"
+  },
+  {
+   "id": "mathkb.rns.square_then_extend_is_the_square",
+   "statement": "composing the residue-wise square with base extension gives the square itself: sq_extend(x on ms, ms, ps) = (x^2 mod prod ms) mod p for every target p, and it does not depend on the order of ms",
+   "vars": [
+    "x",
+    "ms",
+    "ps"
+   ],
+   "forms": {
+    "python": "sq_extend([x % m for m in ms], ms, ps) == [x * x % math.prod(ms) % p for p in ps] and sq_extend([x % m for m in ms[::-1]], ms[::-1], ps) == sq_extend([x % m for m in ms], ms, ps)"
+   },
+   "prelude": "P16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\nimport math\ndef crt(rs, ms):\n    M = math.prod(ms)\n    return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef sq_extend(rs, ms, ps):\n    M = math.prod(ms); x = crt(rs, ms)\n    return [x * x % M % p for p in ps]\n",
+   "gen": "def gen(R, scope):\n    import math\n    k = R.randint(1, 5); ms = R.sample(P16, k)\n    ps = R.sample([p for p in P16 if p not in ms], R.randint(1, 4))\n    return R.randrange(math.prod(ms)), ms, ps",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0, composer station)",
+   "why": "the first concept the COMPOSER built from two cemented concepts (rns_mul + rns_extend) rather than an authored equation"
+  },
+  {
+   "id": "mathkb.rns_montgomery.base_a_agrees_with_base_b",
+   "statement": "the RNS Montgomery product read on base A is the same number as on base B: crt(mont_a(...), A) == crt(mont(...), B) == (x*y + q*N)/MA, and it stays in the Montgomery domain (crt mod N == x*y*MA mod N)",
+   "vars": [
+    "x",
+    "y",
+    "N",
+    "A",
+    "B"
+   ],
+   "forms": {
+    "python": "crt(mont_a(x, y, N, A, B), A) == (x * y + (-x * y * pow(N, -1, math.prod(A))) % math.prod(A) * N) // math.prod(A) and crt(mont_a(x * math.prod(A) % N, y * math.prod(A) % N, N, A, B), A) % N == x * y * math.prod(A) % N"
+   },
+   "prelude": "P16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\nimport math\ndef crt(rs, bs):\n    M = math.prod(bs)\n    return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, bs)) % M\ndef mont_a(x, y, N, A, B):\n    MA = math.prod(A)\n    q = (-x * y * pow(N, -1, MA)) % MA\n    r = (x * y + q * N) // MA\n    return [r % a for a in A]                      # mont gives r on B; base extension carries it to A\n",
+   "gen": "def gen(R, scope):\n    import math\n    while True:\n        k = R.randint(2, 5); pr = R.sample(P16, 2 * k); A, B = pr[:k], pr[k:]\n        MA, MB = math.prod(A), math.prod(B)\n        if MA // 4 < 3: continue\n        N = R.randrange(3, min(MA // 4, MB // 2)) | 1\n        if math.gcd(N, MA) == 1: return R.randrange(N), R.randrange(N), N, A, B\n",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (CYCLONE-SHIELD-0, composer station)",
+   "why": "the step rns_modexp needs: mont gives the product on base B, base extension carries it back to A so the next squaring can run"
+  },
+  {
+   "id": "mathkb.matmul_mod.associative_distributive",
+   "statement": "the matrix product mod m is associative and distributes over addition: (AB)C = A(BC) and A(B+C) = AB + AC (mod m)",
+   "vars": [
+    "A",
+    "B",
+    "C",
+    "n",
+    "m"
+   ],
+   "forms": {
+    "python": "mm(mm(A, B, n, m), C, n, m) == mm(A, mm(B, C, n, m), n, m) and mm(A, add(B, C, m), n, m) == add(mm(A, B, n, m), mm(A, C, n, m), m)"
+   },
+   "prelude": "def mm(A, B, n, m):\n    return [sum(A[i*n+k]*B[k*n+j] for k in range(n)) % m for i in range(n) for j in range(n)]\ndef add(A, B, m):\n    return [(x+y) % m for x, y in zip(A, B)]\n",
+   "gen": "def gen(R, scope):\n    n = R.randint(1, 5); m = R.choice([2, 3, 251, 65521, R.randint(2, 65535)])\n    mk = lambda: [R.randrange(m) for _ in range(n*n)]\n    return mk(), mk(), mk(), n, m",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1 group 2)",
+   "why": "multi-modular exact linear algebra (FFLAS/FFPACK) for the Armilla math core"
+  },
+  {
+   "id": "mathkb.det_mod.multiplicative",
+   "statement": "the determinant mod m is multiplicative: det(AB) = det(A)·det(B) (mod m), n in 1..3",
+   "vars": [
+    "A",
+    "B",
+    "n",
+    "m"
+   ],
+   "forms": {
+    "python": "det(mm(A, B, n, m), n, m) == det(A, n, m) * det(B, n, m) % m"
+   },
+   "prelude": "def mm(A, B, n, m):\n    return [sum(A[i*n+k]*B[k*n+j] for k in range(n)) % m for i in range(n) for j in range(n)]\ndef det(a, n, m):\n    if n == 1: return a[0] % m\n    if n == 2: return (a[0]*a[3] - a[1]*a[2]) % m\n    return (a[0]*(a[4]*a[8]-a[5]*a[7]) - a[1]*(a[3]*a[8]-a[5]*a[6]) + a[2]*(a[3]*a[7]-a[4]*a[6])) % m\n",
+   "gen": "def gen(R, scope):\n    n = R.randint(1, 3); m = R.choice([2, 3, 251, 65521, R.randint(2, 65535)])\n    mk = lambda: [R.randrange(m) for _ in range(n*n)]\n    return mk(), mk(), n, m",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1 group 2)",
+   "why": "multi-modular determinant building block"
+  },
+  {
+   "id": "mathkb.mr_digits.horner_roundtrip",
+   "statement": "the mixed-radix digits of x are in range and Horner-recombine to x: every 0 <= d_i < m_i and d_0 + m_0(d_1 + m_1(d_2 + ...)) = x",
+   "vars": [
+    "x",
+    "ms"
+   ],
+   "forms": {
+    "python": "all(0 <= d < m for d, m in zip(mr_digits(res(x, ms), ms), ms)) and horner(mr_digits(res(x, ms), ms), ms) == x"
+   },
+   "prelude": "import math\nP16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\ndef crt(rs, ms):\n    M = math.prod(ms); return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef res(x, ms): return [x % m for m in ms]\ndef mr_digits(rs, ms):                      # Garner: d_i = ((r_i - value of the digits so far) * inverse of the product of the earlier moduli) mod m_i\n    d = []\n    for i, m in enumerate(ms):\n        v = 0; w = 1\n        for j in range(i): v += d[j] * w; w *= ms[j]\n        d.append((rs[i] - v) * pow(w % m, -1, m) % m)\n    return d\ndef horner(d, ms):\n    v = 0\n    for k in range(len(ms) - 1, -1, -1): v = v * ms[k] + d[k]\n    return v\n",
+   "gen": "def mods(R, lo=1, hi=10):\n    ms = R.sample([p for p in P16 if p % 2], R.randint(lo, hi))\n    return ms\ndef gen(R, scope):\n    ms = mods(R, 1, 12); M = math.prod(ms)\n    return R.choice([0, 1, M - 1, (M - 1) // 2, R.randrange(M), R.randrange(M)]), ms",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-R3, built by the factory)",
+   "why": "RNS to positional: the exact bridge the executor needs (Garner 1959)"
+  },
+  {
+   "id": "mathkb.rns_compare.total_order",
+   "statement": "comparing residue vectors is the numeric order on [0, M): antisymmetric (cmp(a,b) = -cmp(b,a)), reflexive-zero, transitive, +1 is strictly above except at M-1, and translation-invariant (cmp(x,y) = cmp(x+c,y+c) when neither wraps)",
+   "vars": [
+    "x",
+    "y",
+    "z",
+    "c",
+    "ms"
+   ],
+   "forms": {
+    "python": "rns_compare(res(x, ms), res(x, ms), ms) == 0 and rns_compare(res(x, ms), res(y, ms), ms) == -rns_compare(res(y, ms), res(x, ms), ms) and not (rns_compare(res(x, ms), res(y, ms), ms) == 1 and rns_compare(res(y, ms), res(z, ms), ms) == 1 and rns_compare(res(x, ms), res(z, ms), ms) != 1) and (x == math.prod(ms) - 1 or rns_compare(res(x, ms), res((x + 1), ms), ms) == -1) and (max(x, y) + c >= math.prod(ms) or rns_compare(res(x, ms), res(y, ms), ms) == rns_compare(res(x + c, ms), res(y + c, ms), ms))"
+   },
+   "prelude": "import math\nP16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\ndef crt(rs, ms):\n    M = math.prod(ms); return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef res(x, ms): return [x % m for m in ms]\ndef mr_digits(rs, ms):                      # Garner: d_i = ((r_i - value of the digits so far) * inverse of the product of the earlier moduli) mod m_i\n    d = []\n    for i, m in enumerate(ms):\n        v = 0; w = 1\n        for j in range(i): v += d[j] * w; w *= ms[j]\n        d.append((rs[i] - v) * pow(w % m, -1, m) % m)\n    return d\ndef rns_compare(ra, rb, ms):                # compare the mixed-radix digits from the top\n    da, db = mr_digits(ra, ms), mr_digits(rb, ms)\n    for i in range(len(ms) - 1, -1, -1):\n        if da[i] != db[i]: return 1 if da[i] > db[i] else -1\n    return 0\n",
+   "gen": "def mods(R, lo=1, hi=10):\n    ms = R.sample([p for p in P16 if p % 2], R.randint(lo, hi))\n    return ms\ndef gen(R, scope):\n    ms = mods(R, 1, 10); M = math.prod(ms)\n    pick = lambda: R.choice([0, M - 1, (M - 1) // 2, (M + 1) // 2, R.randrange(M), R.randrange(M)])\n    M2 = M - 1 - max(0, 0); return pick(), pick(), pick(), R.choice([1, 2, 3, R.randrange(1, max(2, M // 4)), R.randrange(1, M) if M > 1 else 1]), ms",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-R3, built by the factory)",
+   "why": "order of RNS numbers without leaving the residues (the comparison paper's problem)"
+  },
+  {
+   "id": "mathkb.sign_detect.odd_under_negation",
+   "statement": "the sign of -x is the opposite of the sign of x, whatever path decided it (fractional CRT or the exact fallback): sign(M - x) = -sign(x), sign(0) = 0",
+   "vars": [
+    "x",
+    "ms"
+   ],
+   "forms": {
+    "python": "sign_detect([(m - r) % m for r, m in zip(res(x, ms), ms)], ms) == -sign_detect(res(x, ms), ms) and (x != 0 or sign_detect(res(x, ms), ms) == 0)"
+   },
+   "prelude": "import math\nP16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\ndef crt(rs, ms):\n    M = math.prod(ms); return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef res(x, ms): return [x % m for m in ms]\ndef mr_digits(rs, ms):                      # Garner: d_i = ((r_i - value of the digits so far) * inverse of the product of the earlier moduli) mod m_i\n    d = []\n    for i, m in enumerate(ms):\n        v = 0; w = 1\n        for j in range(i): v += d[j] * w; w *= ms[j]\n        d.append((rs[i] - v) * pow(w % m, -1, m) % m)\n    return d\ndef rns_compare(ra, rb, ms):                # compare the mixed-radix digits from the top\n    da, db = mr_digits(ra, ms), mr_digits(rb, ms)\n    for i in range(len(ms) - 1, -1, -1):\n        if da[i] != db[i]: return 1 if da[i] > db[i] else -1\n    return 0\ndef sign_detect(rs, ms):                    # fractional CRT: x/M = frac(sum (r_i * inv_i mod m_i)/m_i) in 32-bit fixed point; exact fallback inside the uncertainty window\n    n = len(ms); M = math.prod(ms); S = 0\n    for r, m in zip(rs, ms): S += ((r * pow(M // m, -1, m) % m) << 32) // m\n    f = S & 0xFFFFFFFF\n    if all(r == 0 for r in rs): return 0\n    if f < 2**31 - n: return 1\n    if f >= 2**31 and f < 2**32 - n: return -1\n    return -1 if rns_compare(rs, [(m - 1) // 2 for m in ms], ms) > 0 else 1\n",
+   "gen": "def mods(R, lo=1, hi=10):\n    ms = R.sample([p for p in P16 if p % 2], R.randint(lo, hi))\n    return ms\ndef gen(R, scope):\n    ms = mods(R, 1, 12); M = math.prod(ms); n = len(ms); w = max(1, M * (n + 1) >> 31)\n    x = R.choice([0, 1, M - 1, (M - 1) // 2, (M + 1) // 2, max(0, (M - 1) // 2 + R.randint(-3 * w - 3, 3 * w + 3)) % M, R.randrange(min(M, 4 * w + 4)), M - 1 - R.randrange(min(M, 4 * w + 4)), R.randrange(M)])\n    return x % M, ms",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-R3, built by the factory)",
+   "why": "sign of a residue number (centered range): the step modular reduction and division in RNS wait on"
+  },
+  {
+   "id": "mathkb.exact_scale.undoes_multiplication",
+   "statement": "scaling by a known modulus product undoes multiplication by it, and in general brackets X: Q * floor(X/Q) <= X < Q * (floor(X/Q) + 1) with the quotient read on the remaining moduli",
+   "vars": [
+    "X",
+    "ms",
+    "q"
+   ],
+   "forms": {
+    "python": "crt(exact_scale(res(X, ms), ms, q), ms[q:]) * math.prod(ms[:q]) <= X < (crt(exact_scale(res(X, ms), ms, q), ms[q:]) + 1) * math.prod(ms[:q]) and crt(exact_scale(res((X // math.prod(ms[:q])) * math.prod(ms[:q]), ms), ms, q), ms[q:]) == X // math.prod(ms[:q])"
+   },
+   "prelude": "import math\nP16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\ndef crt(rs, ms):\n    M = math.prod(ms); return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef res(x, ms): return [x % m for m in ms]\ndef mr_digits(rs, ms):                      # Garner: d_i = ((r_i - value of the digits so far) * inverse of the product of the earlier moduli) mod m_i\n    d = []\n    for i, m in enumerate(ms):\n        v = 0; w = 1\n        for j in range(i): v += d[j] * w; w *= ms[j]\n        d.append((rs[i] - v) * pow(w % m, -1, m) % m)\n    return d\ndef exact_scale(rs, ms, q):                 # mixed-radix digits above q are the digits of floor(X/Q); Horner them modulo each remaining modulus\n    d = mr_digits(rs, ms); out = []\n    for j in range(q, len(ms)):\n        v = 0\n        for k in range(len(ms) - 1, q - 1, -1): v = (v * ms[k] + d[k]) % ms[j]\n        out.append(v)\n    return out\n",
+   "gen": "def mods(R, lo=1, hi=10):\n    ms = R.sample([p for p in P16 if p % 2], R.randint(lo, hi))\n    return ms\ndef gen(R, scope):\n    ms = mods(R, 2, 10); q = R.randint(1, len(ms) - 1); M = math.prod(ms)\n    return R.choice([0, M - 1, R.randrange(M), R.randrange(M)]), ms, q",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-R3, built by the factory)",
+   "why": "divide by a known modulus product in RNS: the exact step of Montgomery/BEHZ scaling and of fixed-point rescale"
+  },
+  {
+   "id": "mathkb.newton_reciprocal.within_one_ulp",
+   "statement": "the Newton reciprocal x of d is the floor of 2^31/d: 0 <= 2^31 - d*x < d (so d*x is within one ulp of 1), and it is non-increasing in d",
+   "vars": [
+    "d",
+    "e"
+   ],
+   "forms": {
+    "python": "0 <= 2**31 - d * recip(d) < d and (d > e or recip(d) >= recip(e)) and (d < e or recip(d) <= recip(e))"
+   },
+   "prelude": "import math\nP16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\ndef crt(rs, ms):\n    M = math.prod(ms); return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef res(x, ms): return [x % m for m in ms]\ndef recip(d):                               # Newton-Raphson x <- x(2 - d x) in 31-bit fixed point from a power-of-two start, then single-ulp up-correction\n    b = d.bit_length(); x = (1 << 31) >> b\n    for _ in range(6): x = (x * ((1 << 32) - d * x)) >> 31\n    for _ in range(4):\n        if d * (x + 1) <= (1 << 31): x += 1\n    return x\n",
+   "gen": "def gen(R, scope):\n    c = lambda: R.choice([2, 3, 2**30, 2**31 - 1, int(2 ** R.uniform(1, 31)), int(2 ** R.uniform(1, 31)), R.randint(2, 100000)])\n    return c(), c()",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-R3, built by the factory)",
+   "why": "division by a runtime value without a divide: the Barrett/Newton route the ring executor uses"
+  },
+  {
+   "id": "mathkb.rational_reconstruction.recovers_the_fraction",
+   "statement": "a fraction with small numerator and denominator is recovered from its residue: rat_rec(a * b^-1 mod M, M) = a/b (lowest terms, b > 0) whenever |a|, b <= isqrt((M-1)/2) and gcd(b, M) = 1",
+   "vars": [
+    "a",
+    "b",
+    "M"
+   ],
+   "forms": {
+    "python": "rat_rec(a * pow(b, -1, M) % M, M) == [a // math.gcd(a, b), b // math.gcd(a, b)]"
+   },
+   "prelude": "import math\nP16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\ndef crt(rs, ms):\n    M = math.prod(ms); return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef res(x, ms): return [x % m for m in ms]\ndef rat_rec(r, M):                          # Wang: extended Euclid on (M, r) until the remainder is <= D, sign-normalise\n    D = math.isqrt((M - 1) // 2); r0, r1, t0, t1 = M, r, 0, 1\n    while r1 > D:\n        q = r0 // r1; r0, r1, t0, t1 = r1, r0 - q * r1, t1, t0 - q * t1\n    return [r1, t1] if t1 > 0 else [-r1, -t1]\n",
+   "gen": "def gen(R, scope):\n    while True:\n        M = R.choice([R.randrange(3, 2**31), R.randrange(2**20, 2**31), R.randrange(3, 4096), 2**31 - 1, 1000003])\n        D = math.isqrt((M - 1) // 2)\n        b = R.choice([1, D, R.randint(1, D)]); a = R.choice([0, D, -D, R.randint(-D, D)])\n        if math.gcd(b, M) == 1 and math.gcd(a, b) == 1: return a, b, M",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-R3, built by the factory)",
+   "why": "exact rational outputs from modular ones (Wang 1981): lets the executor return a/b from a ring computation"
+  },
+  {
+   "id": "mathkb.range_plan.rings_suffice",
+   "statement": "the planned rings hold the range: prod of the first k moduli >= 2^(bits+1) (so every |value| <= 2^bits is representable), and asking for more bits never plans fewer rings",
+   "vars": [
+    "ms",
+    "bits",
+    "more"
+   ],
+   "forms": {
+    "python": "(lambda k: k is None or (math.prod(ms[:k]) >= 2 ** (bits + 1) and (range_plan(ms, bits + more) is None or range_plan(ms, bits + more) >= k)))(range_plan(ms, bits))"
+   },
+   "prelude": "import math\nP16 = [p for p in range(30001, 65536, 2) if all(p % q for q in range(3, int(p ** 0.5) + 1, 2))]\ndef crt(rs, ms):\n    M = math.prod(ms); return sum(r * (M // m) * pow(M // m, -1, m) for r, m in zip(rs, ms)) % M\ndef res(x, ms): return [x % m for m in ms]\ndef range_plan(ms, bits):                   # fewest rings whose whole-bit lengths cover bits + 1\n    tot = 0\n    for k, m in enumerate(ms, 1):\n        tot += m.bit_length() - 1\n        if tot >= bits + 1: return k\n    return None\n",
+   "gen": "def gen(R, scope):\n    ms = sorted(R.sample(P16, R.randint(1, 30)), reverse=True)\n    return ms, R.randint(0, 400), R.randint(0, 200)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-R3, built by the factory)",
+   "why": "how many rings an equation needs from its result bound: the sizing step of the ring executor"
+  },
+  {
+   "id": "mathkb.gcd.divides_and_homogeneous",
+   "statement": "gcd(a,b) divides both, is symmetric, and gcd(ka,kb) = k·gcd(a,b)",
+   "vars": [
+    "a",
+    "b",
+    "k"
+   ],
+   "forms": {
+    "python": "(lambda g: g > 0 and a % g == 0 and b % g == 0 and gcd(b, a) == g and gcd(k*a, k*b) == k*g)(gcd(a, b))"
+   },
+   "prelude": "def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n",
+   "gen": "def gen(R, scope):\n    c = R.choice([1, 1, 2, 6, 35])\n    a = c * R.randint(1, 3000); b = c * R.randint(1, 3000)\n    return a, b, R.randint(1, 50)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "Euclid's gcd for the Armilla math core"
+  },
+  {
+   "id": "mathkb.ext_gcd.bezout",
+   "statement": "extended Euclid returns [g, x, y] with a·x + b·y = g and g divides a and b",
+   "vars": [
+    "a",
+    "b"
+   ],
+   "forms": {
+    "python": "(lambda r: r[1]*a + r[2]*b == r[0] and r[0] > 0 and a % r[0] == 0 and b % r[0] == 0)(ext_gcd(a, b))"
+   },
+   "prelude": "def ext_gcd(a, b):\n    r0, r1, s0, s1, t0, t1 = a, b, 1, 0, 0, 1\n    while r1 > 0:\n        q = r0 // r1\n        r0, r1, s0, s1, t0, t1 = r1, r0 - q*r1, s1, s0 - q*s1, t1, t0 - q*t1\n    return [r0, s0, t0]\n",
+   "gen": "def gen(R, scope):\n    c = R.choice([1, 1, 3, 10])\n    return c * R.randint(1, 5000), c * R.randint(1, 5000)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "Bezout's identity via extended Euclid"
+  },
+  {
+   "id": "mathkb.mm_combine.crt_per_entry",
+   "statement": "each combined entry lies in [0, m1·m2) and reduces to its two residues (CRT bijection per entry)",
+   "vars": [
+    "r1",
+    "m1",
+    "r2",
+    "m2"
+   ],
+   "forms": {
+    "python": "(lambda x: all(0 <= v < m1*m2 for v in x) and [v % m1 for v in x] == r1 and [v % m2 for v in x] == r2)(mm_combine(r1, m1, r2, m2))"
+   },
+   "prelude": "def mm_combine(r1, m1, r2, m2):\n    inv = pow(m1, -1, m2)\n    return [a + m1 * ((b - a) * inv % m2) for a, b in zip(r1, r2)]\n",
+   "gen": "def gen(R, scope):\n    P = [p for p in range(2, 400) if all(p % d for d in range(2, int(p**0.5)+1))]\n    m1, m2 = R.sample(P, 2); n = R.randint(1, 6)\n    return [R.randrange(m1) for _ in range(n)], m1, [R.randrange(m2) for _ in range(n)], m2",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "multi-modular combine for exact linear algebra"
+  },
+  {
+   "id": "mathkb.solve_mod.satisfies_the_system",
+   "statement": "the solution x of A x = b over Z_p satisfies A x ≡ b (mod p) (n = 2, 3; det A != 0)",
+   "vars": [
+    "A",
+    "b",
+    "n",
+    "p"
+   ],
+   "forms": {
+    "python": "(lambda x: all(sum(A[i*n+j]*x[j] for j in range(n)) % p == b[i] % p for i in range(n)))(solve_mod(A, b, n, p))"
+   },
+   "prelude": "def det(M, n):\n    if n == 2: return M[0]*M[3] - M[1]*M[2]\n    return M[0]*(M[4]*M[8]-M[5]*M[7]) - M[1]*(M[3]*M[8]-M[5]*M[6]) + M[2]*(M[3]*M[7]-M[4]*M[6])\ndef solve_mod(A, b, n, p):\n    D = det(A, n) % p; inv = pow(D, -1, p); xs = []\n    for c in range(n):\n        M = [b[i] if j == c else A[i*n+j] for i in range(n) for j in range(n)]; xs.append(det(M, n) * inv % p)\n    return xs\n",
+   "gen": "def gen(R, scope):\n    while True:\n        n = R.choice([2, 3]); p = R.choice([3, 5, 7, 251, 65521])\n        A = [R.randrange(p) for _ in range(n*n)]; b = [R.randrange(p) for _ in range(n)]\n        if det(A, n) % p: return A, b, n, p",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "Cramer's rule over a prime field"
+  },
+  {
+   "id": "mathkb.ntt.inverse_and_convolution",
+   "statement": "intt(ntt(x)) = x, and ntt turns cyclic convolution into a pointwise product: ntt(x * y) = ntt(x) . ntt(y)",
+   "vars": [
+    "x",
+    "y",
+    "wp",
+    "p"
+   ],
+   "forms": {
+    "python": "intt(ntt(x, wp, p), wp, p) == x and ntt(cyc(x, y, p), wp, p) == [a*b % p for a, b in zip(ntt(x, wp, p), ntt(y, wp, p))]"
+   },
+   "prelude": "def ntt(x, wp, p):\n    n = len(x)\n    return [sum(x[j] * wp[j * k % n] for j in range(n)) % p for k in range(n)]\ndef intt(X, wp, p):\n    n = len(X); ninv = pow(n, -1, p)\n    return [sum(X[k] * wp[(n - j * k % n) % n] for k in range(n)) * ninv % p for j in range(n)]\ndef cyc(x, y, p):\n    n = len(x); return [sum(x[i] * y[(k - i) % n] for i in range(n)) % p for k in range(n)]\n",
+   "gen": "_C = {}\ndef _root(p, n):\n    if (p, n) in _C: return _C[(p, n)]\n    fs = [q for q in range(2, p) if (p - 1) % q == 0 and all(q % z for z in range(2, int(q**0.5)+1))]\n    g = next(x for x in range(2, p) if all(pow(x, (p-1)//q, p) != 1 for q in fs))\n    _C[(p, n)] = pow(g, (p-1)//n, p); return _C[(p, n)]\ndef gen(R, scope):\n    P = [q for q in range(5, 3000) if all(q % d for d in range(2, int(q**0.5)+1))]\n    n = R.choice([2, 4, 8]); p = R.choice([q for q in P if (q - 1) % n == 0])\n    w = _root(p, n); wp = [pow(w, i, p) for i in range(n)]\n    return [R.randrange(p) for _ in range(n)], [R.randrange(p) for _ in range(n)], wp, p",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "NTT for the Armilla math core (lattice cryptography / polynomial multiply)"
+  },
+  {
+   "id": "mathkb.intt.round_trip_from_the_frequency_side",
+   "statement": "ntt(intt(X)) = X (the inverse really inverts from the other side too)",
+   "vars": [
+    "x",
+    "y",
+    "wp",
+    "p"
+   ],
+   "forms": {
+    "python": "ntt(intt(x, wp, p), wp, p) == x"
+   },
+   "prelude": "def ntt(x, wp, p):\n    n = len(x)\n    return [sum(x[j] * wp[j * k % n] for j in range(n)) % p for k in range(n)]\ndef intt(X, wp, p):\n    n = len(X); ninv = pow(n, -1, p)\n    return [sum(X[k] * wp[(n - j * k % n) % n] for k in range(n)) * ninv % p for j in range(n)]\ndef cyc(x, y, p):\n    n = len(x); return [sum(x[i] * y[(k - i) % n] for i in range(n)) % p for k in range(n)]\n",
+   "gen": "_C = {}\ndef _root(p, n):\n    if (p, n) in _C: return _C[(p, n)]\n    fs = [q for q in range(2, p) if (p - 1) % q == 0 and all(q % z for z in range(2, int(q**0.5)+1))]\n    g = next(x for x in range(2, p) if all(pow(x, (p-1)//q, p) != 1 for q in fs))\n    _C[(p, n)] = pow(g, (p-1)//n, p); return _C[(p, n)]\ndef gen(R, scope):\n    P = [q for q in range(5, 3000) if all(q % d for d in range(2, int(q**0.5)+1))]\n    n = R.choice([2, 4, 8]); p = R.choice([q for q in P if (q - 1) % n == 0])\n    w = _root(p, n); wp = [pow(w, i, p) for i in range(n)]\n    return [R.randrange(p) for _ in range(n)], [R.randrange(p) for _ in range(n)], wp, p",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "intt side of the NTT pair"
+  },
+  {
+   "id": "mathkb.polymul_negacyclic.shift_and_commute",
+   "statement": "multiplication in Z_p[x]/(x^n+1) commutes and respects the shift (x·a)·b = x·(a·b), where x·a rotates and negates the wrapped coefficient",
+   "vars": [
+    "a",
+    "b",
+    "p"
+   ],
+   "forms": {
+    "python": "pm(a, b, p) == pm(b, a, p) and pm(shift(a, p), b, p) == shift(pm(a, b, p), p)"
+   },
+   "prelude": "def pm(a, b, p):\n    n = len(a); c = [0] * n\n    for i in range(n):\n        for j in range(n):\n            k = i + j\n            if k < n: c[k] += a[i] * b[j]\n            else: c[k - n] -= a[i] * b[j]\n    return [v % p for v in c]\ndef shift(a, p):\n    return [(-a[-1]) % p] + a[:-1]\n",
+   "gen": "def gen(R, scope):\n    n = R.randint(1, 8); p = R.choice([3, 17, 251, 12289, 65521])\n    return [R.randrange(p) for _ in range(n)], [R.randrange(p) for _ in range(n)], p",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "negacyclic polynomial product (ML-KEM / ML-DSA ring)"
+  },
+  {
+   "id": "mathkb.miller_rabin.primes_always_pass",
+   "statement": "a prime never has a witness: for prime n and every base a in [2, n-2], the strong test passes",
+   "vars": [
+    "n",
+    "a"
+   ],
+   "forms": {
+    "python": "mr(n, a) == 1"
+   },
+   "prelude": "def mr(n, a):\n    d, s = n - 1, 0\n    while d % 2 == 0: d //= 2; s += 1\n    x = pow(a, d, n)\n    if x in (1, n - 1): return 1\n    for _ in range(s - 1):\n        x = x * x % n\n        if x == n - 1: return 1\n    return 0\n",
+   "gen": "_P = []\ndef gen(R, scope):\n    if not _P:\n        N = 200000; sv = bytearray([1]) * N\n        for i in range(2, int(N**0.5)+1):\n            if sv[i]: sv[i*i::i] = bytearray(len(sv[i*i::i]))\n        _P.extend(i for i in range(5, N) if sv[i])\n    n = R.choice(_P); return n, R.randrange(2, n - 1)",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "Miller-Rabin soundness on primes"
+  },
+  {
+   "id": "mathkb.crt_general.iff_gcd_divides",
+   "statement": "x ≡ a (mod m), x ≡ b (mod n) is solvable exactly when gcd(m,n) divides a-b; a solution is the least one, < lcm(m,n)",
+   "vars": [
+    "a",
+    "m",
+    "b",
+    "n"
+   ],
+   "forms": {
+    "python": "(lambda x: (x == -1) == ((a - b) % gcd(m, n) != 0) and (x == -1 or (0 <= x < lcm(m, n) and x % m == a and x % n == b)))(crtg(a, m, b, n))"
+   },
+   "prelude": "from math import gcd\ndef lcm(m, n): return m // gcd(m, n) * n\ndef crtg(a, m, b, n):\n    g = gcd(m, n)\n    if (a - b) % g: return -1\n    return next(x for x in range(a, lcm(m, n), m) if x % n == b)\n",
+   "gen": "def gen(R, scope):\n    m = R.randint(1, 20); n = R.randint(1, 20)\n    return R.randrange(m), m, R.randrange(n), n",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "when two cycles meet (generalised CRT)"
+  },
+  {
+   "id": "mathkb.pollard_rho.returns_a_divisor",
+   "statement": "the rho walk's gcd divides n, and on a semiprime p·q it is 1, n, p or q (never another number)",
+   "vars": [
+    "p",
+    "q"
+   ],
+   "forms": {
+    "python": "(lambda d: n_(p, q) % d == 0 and d in (1, p*q, p, q))(rho(p*q))"
+   },
+   "prelude": "import math\ndef n_(p, q): return p * q\ndef rho(n):\n    x = y = 2; q = 1\n    for _ in range(16):\n        x = (x*x + 1) % n; y = (y*y + 1) % n; y = (y*y + 1) % n; q = q * abs(x - y) % n\n    return math.gcd(q, n)\n",
+   "gen": "_P = []\ndef gen(R, scope):\n    if not _P: _P.extend(x for x in range(3, 300, 2) if all(x % d for d in range(3, int(x**0.5)+1, 2)))\n    p, q = R.sample(_P, 2); return p, q",
+   "type": "gen",
+   "proposed_by": "claude-seat 2026-10-14 (ARMILLA-INGEST-1, built by the factory)",
+   "why": "Pollard's rho with Brent's batched gcd"
+  }
+ ],
+ "blocks": []
+}

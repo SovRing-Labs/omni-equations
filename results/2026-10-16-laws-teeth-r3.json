@@ -1,0 +1,37 @@
+[
+ {
+  "id": "mathkb.mr_digits.horner_roundtrip",
+  "good": "1000/1000",
+  "broken": "73/1000 pass, 927 fail"
+ },
+ {
+  "id": "mathkb.rns_compare.total_order",
+  "good": "1000/1000",
+  "broken": "955/1000 pass, 45 fail"
+ },
+ {
+  "id": "mathkb.sign_detect.odd_under_negation",
+  "good": "1000/1000",
+  "broken": "813/1000 pass, 187 fail"
+ },
+ {
+  "id": "mathkb.exact_scale.undoes_multiplication",
+  "good": "1000/1000",
+  "broken": "260/1000 pass, 740 fail"
+ },
+ {
+  "id": "mathkb.newton_reciprocal.within_one_ulp",
+  "good": "1000/1000",
+  "broken": "409/1000 pass, 591 fail"
+ },
+ {
+  "id": "mathkb.rational_reconstruction.recovers_the_fraction",
+  "good": "1000/1000",
+  "broken": "321/1000 pass, 679 fail"
+ },
+ {
+  "id": "mathkb.range_plan.rings_suffice",
+  "good": "1000/1000",
+  "broken": "883/1000 pass, 117 fail"
+ }
+]

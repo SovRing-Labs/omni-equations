@@ -1,0 +1,43 @@
+# command: python3 -I tools/lawcheck.py .   (run from the repo root)
+# machine: Intel i5-8365U laptop (8 threads), Linux, Python 3.12.3, rustc 1.98.0   date: 2026-10-16
+mathkb.crt.bijection: 300/300 ok
+mathkb.mixed_radix.roundtrip: 300/300 ok
+mathkb.barrett.equals_mod: 300/300 ok
+mathkb.hamming.triangle: 300/300 ok
+mathkb.isqrt.newton_brackets: 300/300 ok
+mathkb.period.reproduces: 300/300 ok
+mathkb.absmean.ternary_sign: 300/300 ok
+mathkb.softmax.normalised_shift_invariant: 300/300 ok
+mathkb.fib.cassini: 300/300 ok
+mathkb.clock.roundtrip: 300/300 ok
+mathkb.montgomery.domain_homomorphism: 300/300 ok
+mathkb.mod_inverse.involution: 300/300 ok
+mathkb.modexp.exponent_and_base_homomorphism: 300/300 ok
+mathkb.base_extension.order_free_and_exact: 300/300 ok
+mathkb.rns.ring_homomorphism: 300/300 ok
+mathkb.rns.extension_is_the_same_number: 300/300 ok
+mathkb.rns_montgomery.domain_homomorphism: 300/300 ok
+mathkb.constant_time.trace_invariant: 300/300 ok
+mathkb.rns.square_then_extend_is_the_square: 300/300 ok
+mathkb.rns_montgomery.base_a_agrees_with_base_b: 300/300 ok
+mathkb.matmul_mod.associative_distributive: 300/300 ok
+mathkb.det_mod.multiplicative: 300/300 ok
+mathkb.mr_digits.horner_roundtrip: 300/300 ok
+mathkb.rns_compare.total_order: 300/300 ok
+mathkb.sign_detect.odd_under_negation: 300/300 ok
+mathkb.exact_scale.undoes_multiplication: 300/300 ok
+mathkb.newton_reciprocal.within_one_ulp: 300/300 ok
+mathkb.rational_reconstruction.recovers_the_fraction: 300/300 ok
+mathkb.range_plan.rings_suffice: 300/300 ok
+mathkb.gcd.divides_and_homogeneous: 300/300 ok
+mathkb.ext_gcd.bezout: 300/300 ok
+mathkb.mm_combine.crt_per_entry: 300/300 ok
+mathkb.solve_mod.satisfies_the_system: 300/300 ok
+mathkb.ntt.inverse_and_convolution: 300/300 ok
+mathkb.intt.round_trip_from_the_frequency_side: 300/300 ok
+mathkb.polymul_negacyclic.shift_and_commute: 300/300 ok
+mathkb.miller_rabin.primes_always_pass: 300/300 ok
+mathkb.crt_general.iff_gcd_divides: 300/300 ok
+mathkb.pollard_rho.returns_a_divisor: 300/300 ok
+{"laws": 39, "draws_each": 300, "failed_laws": 0, "mode": "laws", "pass": true}
+# exit: 0

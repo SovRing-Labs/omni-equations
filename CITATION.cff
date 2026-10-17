@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "omni-equations: a library of 67 verified equations as dependency-free Rust"
+version: 0.1.0
+date-released: 2026-10-16
+abstract: "An equation library built by a clean-room factory from published definitions: modular and residue-number-system arithmetic, number-theoretic transforms, primality and factoring steps, VP9 inverse transforms and filters, Opus range decoding, fixed-point exp / ln / softmax. Each concept is one dependency-free Rust file with its definition (an s-expression), a property law, and recorded rows that a script re-checks from a clean clone. Pre-alpha. Published as defensive prior art."
+authors:
+  - family-names: "De Santiago"
+    given-names: "Juan Carlos"
+repository-code: "https://github.com/SovRing-Labs/omni-equations"
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+keywords: [equation library, residue number system, modular arithmetic, number theoretic transform, verified code, clean-room, Rust]

@@ -1,0 +1,71 @@
+# command: python3 -I tools/verify.py .   (run from the repo root)
+# machine: Intel i5-8365U laptop (8 threads), Linux, Python 3.12.3, rustc 1.98.0   date: 2026-10-16
+absmean_quant: 84 rows, PASS
+clock_read: 84 rows, PASS
+crt2: 55 rows, PASS
+mod_barrett: 84 rows, PASS
+hamming: 84 rows, PASS
+mixed_radix: 82 rows, PASS
+isqrt: 84 rows, PASS
+softmax: 84 rows, PASS
+period: 84 rows, PASS
+fib: 84 rows, PASS
+mont_mul: 84 rows, PASS
+mod_inverse: 84 rows, PASS
+modexp: 84 rows, PASS
+base_extension: 84 rows, PASS
+rns_mul: 84 rows, PASS
+rns_extend: 84 rows, PASS
+rns_mont_mul: 84 rows, PASS
+ct_reduce: 84 rows, PASS
+rns_sq_extend: 84 rows, PASS
+rns_mont_mul_a: 84 rows, PASS
+matmul_mod: 84 rows, PASS
+det_mod: 84 rows, PASS
+mr_digits: 84 rows, PASS
+rns_compare: 84 rows, PASS
+sign_detect: 84 rows, PASS
+exact_scale: 84 rows, PASS
+newton_reciprocal: 84 rows, PASS
+rational_reconstruction: 84 rows, PASS
+range_plan: 84 rows, PASS
+gcd: 84 rows, PASS
+mm_combine: 84 rows, PASS
+ext_gcd: 84 rows, PASS
+solve_mod: 84 rows, PASS
+ntt: 84 rows, PASS
+intt: 84 rows, PASS
+polymul_negacyclic: 84 rows, PASS
+miller_rabin: 84 rows, PASS
+crt_general: 84 rows, PASS
+pollard_rho: 84 rows, PASS
+shuffle_mul: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+shuffle_div: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+shuffle_pow: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+rd_step: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+rd_packet: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_butterfly: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+idct4: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+idct8: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+idct16: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+idct32: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+iadst4: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+iadst8: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+iadst16: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+inv_txfm_2d: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_intra_dc: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_intra_tm: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_intra_v: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_intra_h: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_lf4: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_lf8: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_lf16: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_subpel8: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+shuffle_pow_frac: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+ring_exp: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+ring_ln: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+celt_energy_pred: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+silk_lpc_synth: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+ring_softmax: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+{"mode": "verify", "passed": 39, "failed": 0, "not_reverifiable": 28, "rows": 3245, "pass": true}
+# exit: 0

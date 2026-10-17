@@ -1,0 +1,8 @@
+# command: python3 -I tools/verify.py . --only idct4,vp9_lf4,ring_ln,rd_step   (run from the repo root)
+# machine: Intel i5-8365U laptop (8 threads), Linux, Python 3.12.3, rustc 1.98.0   date: 2026-10-16
+rd_step: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+idct4: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+vp9_lf4: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+ring_ln: NOT-RE-VERIFIABLE-HERE (no recorded spec rows in this repository)
+{"mode": "verify", "passed": 0, "failed": 0, "not_reverifiable": 4, "rows": 0, "pass": false}
+# exit: 1

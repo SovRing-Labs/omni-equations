@@ -1,0 +1,21 @@
+# omni-equations
+
+> Our equation library: 67 concepts as dependency-free Rust, with their definitions, laws and recorded spec rows; free for the community.
+
+Setup: `git clone --depth 1 https://github.com/SovRing-Labs/omni-equations && cd omni-equations && python3 -I tools/verify.py . --only hamming,fib,gcd,mod_inverse,ntt | tail -1` (expect: "pass": true).
+Status: pre-alpha, under development — read STATUS.md before relying on a number.
+Licence: Apache-2.0 (code) + CC BY 4.0 (documents).
+
+## Docs
+- [README.md](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/README.md)
+- [STATUS.md](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/STATUS.md)
+- [suite.json](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/suite.json)
+- [TECHNICAL-DISCLOSURE.md](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/TECHNICAL-DISCLOSURE.md)
+- [PROVENANCE.md](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/PROVENANCE.md)
+- [LICENSING.md](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/LICENSING.md)
+- [DATA.md](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/DATA.md)
+- [CITATION.cff](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/CITATION.cff)
+- [AGENTS.md](https://raw.githubusercontent.com/SovRing-Labs/omni-equations/main/AGENTS.md)
+
+## Optional
+- [SovRing umbrella (all repos, MCP setup)](https://github.com/SovRing-Labs/SovRing)

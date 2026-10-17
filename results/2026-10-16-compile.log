@@ -1,0 +1,5 @@
+# command: python3 -I tools/verify.py . --compile   (run from the repo root)
+# machine: Intel i5-8365U laptop (8 threads), Linux, Python 3.12.3, rustc 1.98.0   date: 2026-10-16
+all emitted files compile; index and files agree; equations balanced
+{"mode": "compile", "concepts": 67, "files": 67, "problems": 0, "pass": true}
+# exit: 0

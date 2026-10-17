@@ -1,0 +1,42 @@
+[
+ {
+  "id": "mathkb.gcd.divides_and_homogeneous",
+  "good": "1000/1000",
+  "broken": "768/1000 pass, 232 fail"
+ },
+ {
+  "id": "mathkb.ext_gcd.bezout",
+  "good": "1000/1000",
+  "broken": "4/1000 pass, 996 fail"
+ },
+ {
+  "id": "mathkb.mm_combine.crt_per_entry",
+  "good": "1000/1000",
+  "broken": "54/1000 pass, 946 fail"
+ },
+ {
+  "id": "mathkb.solve_mod.satisfies_the_system",
+  "good": "1000/1000",
+  "broken": "327/1000 pass, 673 fail"
+ },
+ {
+  "id": "mathkb.ntt.inverse_and_convolution",
+  "good": "1000/1000",
+  "broken": "0/1000 pass, 1000 fail"
+ },
+ {
+  "id": "mathkb.intt.round_trip_from_the_frequency_side",
+  "good": "1000/1000",
+  "broken": "0/1000 pass, 1000 fail"
+ },
+ {
+  "id": "mathkb.polymul_negacyclic.shift_and_commute",
+  "good": "1000/1000",
+  "broken": "152/1000 pass, 848 fail"
+ },
+ {
+  "id": "mathkb.miller_rabin.primes_always_pass",
+  "good": "1000/1000",
+  "broken": "668/1000 pass, 332 fail"
+ }
+]
